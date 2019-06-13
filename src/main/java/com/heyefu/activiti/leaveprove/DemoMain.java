@@ -36,7 +36,7 @@ public class DemoMain {
     public static void main(String[] args) throws ParseException {
         LOGGER.info("开始请假流程...");
         ProcessEngine engine = getEngine();
-        ProcessDefinition definition = deployProcess("leave.bpmn", engine);
+        ProcessDefinition definition = deployProcess("process/leave.bpmn", engine);
         ProcessInstance instance = getProcessInstance(engine, definition);
         processTask(engine, instance);
         LOGGER.info("结束请假流程...");

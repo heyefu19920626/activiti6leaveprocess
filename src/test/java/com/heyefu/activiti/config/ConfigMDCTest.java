@@ -27,7 +27,7 @@ public class ConfigMDCTest {
     public ActivitiRule activitiRule = new ActivitiRule();
 
     @Test
-    @Deployment(resources = "leave.bpmn")
+    @Deployment(resources = "process/leave.bpmn")
     public void test() {
         ProcessInstance processInstance = activitiRule.getRuntimeService()
                 .startProcessInstanceByKey("leave");
