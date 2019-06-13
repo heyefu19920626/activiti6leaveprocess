@@ -1,5 +1,7 @@
 package com.heyefu.activiti.config;
 
+import org.activiti.engine.delegate.event.ActivitiEventType;
+import org.activiti.engine.delegate.event.impl.ActivitiEventImpl;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.activiti.engine.test.ActivitiRule;
@@ -30,6 +32,9 @@ public class ConfigEventListenerTest {
         ProcessInstance processInstance = activitiRule.getRuntimeService().startProcessInstanceByKey("moreSimple");
         Task task = activitiRule.getTaskService().createTaskQuery().singleResult();
         activitiRule.getTaskService().complete(task.getId());   //执行Task
+
+        //选择custom，避免跟系统自带的产生冲突
+        activitiRule.getRuntimeService().dispatchEvent(new ActivitiEventImpl(ActivitiEventType.CUSTOM));
     }
 
 }
