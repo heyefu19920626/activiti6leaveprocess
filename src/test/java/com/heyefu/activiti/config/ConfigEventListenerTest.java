@@ -1,5 +1,6 @@
 package com.heyefu.activiti.config;
 
+import com.heyefu.activiti.listener.CustomEventListener;
 import org.activiti.engine.delegate.event.ActivitiEventType;
 import org.activiti.engine.delegate.event.impl.ActivitiEventImpl;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -33,6 +34,8 @@ public class ConfigEventListenerTest {
         Task task = activitiRule.getTaskService().createTaskQuery().singleResult();
         activitiRule.getTaskService().complete(task.getId());   //执行Task
 
+//        不通过配置文件配置监听器
+        activitiRule.getRuntimeService().addEventListener(new CustomEventListener());
         //选择custom，避免跟系统自带的产生冲突
         activitiRule.getRuntimeService().dispatchEvent(new ActivitiEventImpl(ActivitiEventType.CUSTOM));
     }

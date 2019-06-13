@@ -35,11 +35,11 @@
                 </property>-->
 
         <!--        第三种方式，监听自定义事件-->
-        <property name="eventListeners">
+        <!--<property name="eventListeners">
             <list>
                 <bean class="com.heyefu.activiti.listener.CustomEventListener"/>
             </list>
-        </property>
+        </property>-->
     </bean>
 
     <bean id="commandInvoker" class="com.heyefu.activiti.intercetor.MDCCommandInvoker"/>
