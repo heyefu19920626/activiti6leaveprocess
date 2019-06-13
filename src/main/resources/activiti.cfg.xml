@@ -10,7 +10,17 @@
         <property name="jdbcDriver" value="org.h2.Driver"/>
         <property name="jdbcUsername" value="sa"/>
         <property name="jdbcPassword" value=""/>
+
+        <!--        自定义拦截器-->
         <property name="commandInvoker" ref="commandInvoker"/>
+        <!--        开启事件日志-->
+        <property name="enableDatabaseEventLogging" value="true"/>
+        <!-- 第一种方式:eventListeners,监听所有事件类型 -->
+        <property name="eventListeners">
+            <list>
+                <bean class="com.heyefu.activiti.listener.ProcessEventListener"/>
+            </list>
+        </property>
     </bean>
 
     <bean id="commandInvoker" class="com.heyefu.activiti.intercetor.MDCCommandInvoker"/>

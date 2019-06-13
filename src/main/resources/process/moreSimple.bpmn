@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef">
+  <process id="moreSimple" name="更简易流程" isExecutable="true">
+    <startEvent id="start" name="开始"></startEvent>
+    <userTask id="step" name="简单一步
+"></userTask>
+    <sequenceFlow id="sid-1C727154-44E9-4B52-B874-3C8F99A06C49" sourceRef="start" targetRef="step"></sequenceFlow>
+    <endEvent id="over" name="结束
+"></endEvent>
+    <sequenceFlow id="sid-EFF06A40-0FCB-4280-B026-A38614B215CE" sourceRef="step" targetRef="over"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_moreSimple">
+    <bpmndi:BPMNPlane bpmnElement="moreSimple" id="BPMNPlane_moreSimple">
+      <bpmndi:BPMNShape bpmnElement="start" id="BPMNShape_start">
+        <omgdc:Bounds height="30.0" width="30.0" x="90.0" y="150.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="step" id="BPMNShape_step">
+        <omgdc:Bounds height="80.0" width="100.0" x="345.0" y="125.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="over" id="BPMNShape_over">
+        <omgdc:Bounds height="28.0" width="28.0" x="660.0" y="150.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="sid-EFF06A40-0FCB-4280-B026-A38614B215CE" id="BPMNEdge_sid-EFF06A40-0FCB-4280-B026-A38614B215CE">
+        <omgdi:waypoint x="445.0" y="164.82078853046596"></omgdi:waypoint>
+        <omgdi:waypoint x="660.0000899260358" y="164.05017888915398"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-1C727154-44E9-4B52-B874-3C8F99A06C49" id="BPMNEdge_sid-1C727154-44E9-4B52-B874-3C8F99A06C49">
+        <omgdi:waypoint x="120.0" y="165.0"></omgdi:waypoint>
+        <omgdi:waypoint x="345.0" y="165.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
