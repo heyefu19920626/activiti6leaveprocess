@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             targetNamespace="http://www.activiti.org/test">
+
+    <message id="messageStart" name="my-message"/>
+
+    <process id="messageReceived">
+        <startEvent id="start" />
+        <sequenceFlow id="flow1" sourceRef="start" targetRef="message-received" />
+        <intermediateCatchEvent id="message-received">
+            <messageEventDefinition messageRef="messageStart"/>
+        </intermediateCatchEvent>
+        <sequenceFlow id="flow2" sourceRef="message-received" targetRef="end" />
+        <endEvent id="end" />
+    </process>
+
+</definitions>

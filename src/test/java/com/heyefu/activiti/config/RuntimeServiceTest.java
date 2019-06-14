@@ -31,6 +31,31 @@ public class RuntimeServiceTest {
 
 
     /**
+     * 测试事件触发的 messageEventReceived  信号捕获
+     */
+    @Test
+    @org.activiti.engine.test.Deployment(resources = "process/message_received.bpmn")
+    public void testMessageEventReceived(){
+        RuntimeService runtimeService = activitiRule.getRuntimeService();
+        //通过流程图中的<process id="my-process">来启动流程
+        ProcessInstance processInstance = runtimeService
+                .startProcessInstanceByKey("messageReceived");
+
+        //获取执行流对象，my-message是消息
+        Execution execution = runtimeService.createExecutionQuery()
+                .messageEventSubscriptionName("my-message").singleResult();
+        LOGGER.info("execution = [{}]" , execution);
+
+        //将流程执行ID作为参数传进去
+        runtimeService.messageEventReceived("my-message",execution.getId());
+
+        execution = runtimeService.createExecutionQuery()
+                .messageEventSubscriptionName("my-message").singleResult();
+        LOGGER.info("execution = [{}]" , execution);
+    }
+
+
+    /**
      * 测试流程触发的 signalEventReceived  信号捕获
      */
     @Test
