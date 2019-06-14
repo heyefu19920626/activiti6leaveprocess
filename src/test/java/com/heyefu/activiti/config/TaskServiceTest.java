@@ -2,6 +2,7 @@ package com.heyefu.activiti.config;
 
 import com.google.common.collect.Maps;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.task.Attachment;
 import org.activiti.engine.task.IdentityLink;
 import org.activiti.engine.task.Task;
 import org.activiti.engine.test.ActivitiRule;
@@ -40,6 +41,37 @@ public class TaskServiceTest {
 
     @Rule
     public ActivitiRule activitiRule = new ActivitiRule();
+
+
+    /**
+     * 测试Task添加附件（Attachment）
+     * <p>
+     * TaskService设置Task附加信息：
+     * 1、任务附件（Attachment）创建与查询，上传附件会基于二进制流存储起来；
+     * 2、任务评论（Comment）创建与查询；
+     * 3、事件记录（Event）创建与查询。
+     */
+    @Test
+    @Deployment(resources = {"process/task.bpmn"})
+    public void testTaskAttachment() {
+        Map<String, Object> variables = Maps.newHashMap();
+        variables.put("message", "my test message . . .");
+        activitiRule.getRuntimeService().startProcessInstanceByKey("task", variables);
+        TaskService taskService = activitiRule.getTaskService();
+        //获取唯一的当前流程暂停的结点
+        Task task = taskService.createTaskQuery().singleResult();
+        //创建一个附件
+        taskService.createAttachment("url", task.getId(), task.getProcessInstanceId()
+                , "name", "description描述", "/url/test.png");
+
+        List<Attachment> taskAttachments = taskService.getTaskAttachments(task.getId());
+
+        for (Attachment taskAttachment : taskAttachments) {
+            //使用json格式输出
+            LOGGER.info("taskAttachment = [{}]",
+                    ToStringBuilder.reflectionToString(taskAttachment, ToStringStyle.JSON_STYLE));
+        }
+    }
 
     /**
      * Task事件权限的配置
