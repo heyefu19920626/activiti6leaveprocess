@@ -31,11 +31,30 @@ public class RuntimeServiceTest {
 
 
     /**
+     * 基于message启动流程
+     * <p>
+     * 基于key启动更为简洁，基于message启动则有点繁琐，需要在流程定义文件里面定义一个message标签。
+     * 并且得到的ProcessInstance[5]，key则是ProcessInstance[4]。
+     * 因为基于message启动会在数据库的表中插入一条记录，所以就变成了5。
+     * 启动过程是根据message信号从事件订阅中找到订阅这个信号的id，最后找到流程定义的key然后启动
+     */
+    @Test
+    @org.activiti.engine.test.Deployment(resources = "process/message_start.bpmn")
+    public void testMessageStart() {
+        RuntimeService runtimeService = activitiRule.getRuntimeService();
+        //通过流程图中的 <message id="messageStart" name="my-message"></message> 来启动流程
+        ProcessInstance processInstance = runtimeService
+                .startProcessInstanceByMessage("my-message");
+
+        LOGGER.info("processInstance = [{}]", processInstance);
+    }
+
+    /**
      * 测试事件触发的 messageEventReceived  信号捕获
      */
     @Test
     @org.activiti.engine.test.Deployment(resources = "process/message_received.bpmn")
-    public void testMessageEventReceived(){
+    public void testMessageEventReceived() {
         RuntimeService runtimeService = activitiRule.getRuntimeService();
         //通过流程图中的<process id="my-process">来启动流程
         ProcessInstance processInstance = runtimeService
@@ -44,14 +63,14 @@ public class RuntimeServiceTest {
         //获取执行流对象，my-message是消息
         Execution execution = runtimeService.createExecutionQuery()
                 .messageEventSubscriptionName("my-message").singleResult();
-        LOGGER.info("execution = [{}]" , execution);
+        LOGGER.info("execution = [{}]", execution);
 
         //将流程执行ID作为参数传进去
-        runtimeService.messageEventReceived("my-message",execution.getId());
+        runtimeService.messageEventReceived("my-message", execution.getId());
 
         execution = runtimeService.createExecutionQuery()
                 .messageEventSubscriptionName("my-message").singleResult();
-        LOGGER.info("execution = [{}]" , execution);
+        LOGGER.info("execution = [{}]", execution);
     }
 
 
@@ -60,7 +79,7 @@ public class RuntimeServiceTest {
      */
     @Test
     @org.activiti.engine.test.Deployment(resources = "process/signal.bpmn")
-    public void testSignalEventReceived(){
+    public void testSignalEventReceived() {
         RuntimeService runtimeService = activitiRule.getRuntimeService();
         //通过流程图中的<process id="signla">来启动流程
         ProcessInstance processInstance = runtimeService
@@ -69,7 +88,7 @@ public class RuntimeServiceTest {
         //获取执行流对象，my-signal是其中信号
         Execution execution = runtimeService.createExecutionQuery()
                 .signalEventSubscriptionName("my-signal").singleResult();
-        LOGGER.info("execution = [{}]" , execution);
+        LOGGER.info("execution = [{}]", execution);
 
         //来触发我们定义的信号,发出一个my-signal的信号，若不是这个信号则下面输出还停留在signal-received这一步
         runtimeService.signalEventReceived("my-signal");
@@ -77,12 +96,12 @@ public class RuntimeServiceTest {
         execution = runtimeService.createExecutionQuery()
                 .signalEventSubscriptionName("my-signal").singleResult();
         //重新打印
-        LOGGER.info("execution = [{}]" , execution);
+        LOGGER.info("execution = [{}]", execution);
     }
 
     /**
      * 流程触发trigger
-     *
+     * <p>
      * 1、使用trigger触发ReceiveTask节点，当流程执行到这个Task节点的时候就会暂停下来，等待需要接受的事件去执行；
      * 2、触发信号捕获事件signalEventReceived，当只有获取这个信号以后才能继续执行；
      * 3、触发消息捕获事件messageEventReceived，只有捕获到某些消息后才能继续执行。
@@ -90,7 +109,7 @@ public class RuntimeServiceTest {
      */
     @Test
     @org.activiti.engine.test.Deployment(resources = "process/trigger.bpmn")
-    public void testTrigger(){
+    public void testTrigger() {
         RuntimeService runtimeService = activitiRule.getRuntimeService();
         //通过流程图中的<process id="my-process">来启动流程
         ProcessInstance processInstance = runtimeService
@@ -99,7 +118,7 @@ public class RuntimeServiceTest {
         //获取执行流对象，someTask是其中事件的id
         Execution execution = runtimeService.createExecutionQuery()
                 .activityId("someTask").singleResult();
-        LOGGER.info("execution = [{}]" , execution);
+        LOGGER.info("execution = [{}]", execution);
 
         //获取这个的id来触发执行
         runtimeService.trigger(execution.getId());
@@ -107,7 +126,7 @@ public class RuntimeServiceTest {
         execution = runtimeService.createExecutionQuery()
                 .activityId("someTask").singleResult();
         //重新打印
-        LOGGER.info("execution = [{}]" , execution);
+        LOGGER.info("execution = [{}]", execution);
     }
 
     /**
