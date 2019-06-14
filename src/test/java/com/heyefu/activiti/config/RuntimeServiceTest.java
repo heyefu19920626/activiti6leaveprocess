@@ -30,6 +30,36 @@ public class RuntimeServiceTest {
     public ActivitiRule activitiRule = new ActivitiRule();
 
     /**
+     * 流程触发trigger
+     *
+     * 1、使用trigger触发ReceiveTask节点，当流程执行到这个Task节点的时候就会暂停下来，等待需要接受的事件去执行；
+     * 2、触发信号捕获事件signalEventReceived，当只有获取这个信号以后才能继续执行；
+     * 3、触发消息捕获事件messageEventReceived，只有捕获到某些消息后才能继续执行。
+     * 注：这里触发信号与触发消息非常相似，但是信号是可以全局发送信号，消息只能针对某个流程实例发送消息。
+     */
+    @Test
+    @org.activiti.engine.test.Deployment(resources = "process/trigger.bpmn")
+    public void testTrigger(){
+        RuntimeService runtimeService = activitiRule.getRuntimeService();
+        //通过流程图中的<process id="my-process">来启动流程
+        ProcessInstance processInstance = runtimeService
+                .startProcessInstanceByKey("trigger");
+
+        //获取执行流对象，someTask是其中事件的id
+        Execution execution = runtimeService.createExecutionQuery()
+                .activityId("someTask").singleResult();
+        LOGGER.info("execution = [{}]" , execution);
+
+        //获取这个的id来触发执行
+        runtimeService.trigger(execution.getId());
+        //重新获取someTask
+        execution = runtimeService.createExecutionQuery()
+                .activityId("someTask").singleResult();
+        //重新打印
+        LOGGER.info("execution = [{}]" , execution);
+    }
+
+    /**
      * 根据流程实例对象来查询
      */
     @Test
