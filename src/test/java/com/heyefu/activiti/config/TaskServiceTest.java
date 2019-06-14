@@ -2,10 +2,7 @@ package com.heyefu.activiti.config;
 
 import com.google.common.collect.Maps;
 import org.activiti.engine.TaskService;
-import org.activiti.engine.task.Attachment;
-import org.activiti.engine.task.Comment;
-import org.activiti.engine.task.IdentityLink;
-import org.activiti.engine.task.Task;
+import org.activiti.engine.task.*;
 import org.activiti.engine.test.ActivitiRule;
 import org.activiti.engine.test.Deployment;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -42,6 +39,42 @@ public class TaskServiceTest {
 
     @Rule
     public ActivitiRule activitiRule = new ActivitiRule();
+
+    /**
+     * 测试Task添加事件记录（Event）
+     */
+    @Test
+    @Deployment(resources = {"process/task.bpmn"})
+    public void testTaskEvent(){
+        Map<String, Object> variables = Maps.newHashMap();
+        variables.put("message","my test message . . .");
+        activitiRule.getRuntimeService().startProcessInstanceByKey("task",variables);
+        TaskService taskService = activitiRule.getTaskService();
+        //获取唯一的当前流程暂停的结点
+        Task task = taskService.createTaskQuery().singleResult();
+        //设置task的发起人owner，这里是user1用户
+        taskService.setOwner(task.getId(),"user1");
+        //设置task事件的代办人
+        taskService.setAssignee(task.getId(),"heyefu");
+        //创建一个评论，参数为事件id  流程实例id  评论内容
+        taskService.addComment(task.getId(),task.getProcessInstanceId(),"comment 1");
+        taskService.addComment(task.getId(),task.getProcessInstanceId(),"comment 2");
+
+        List<Comment> taskComments = taskService.getTaskComments(task.getId());
+
+        for (Comment taskComment : taskComments){
+            //使用json格式输出任务评论
+            LOGGER.info("taskComment = [{}]",
+                    ToStringBuilder.reflectionToString(taskComment,ToStringStyle.JSON_STYLE));
+        }
+
+        //获取事件记录
+        List<Event> taskEvents = taskService.getTaskEvents(task.getId());
+        for (Event taskEvent : taskEvents){
+            LOGGER.info("taskEvent = [{}]",ToStringBuilder.reflectionToString(taskEvent,ToStringStyle.JSON_STYLE));
+        }
+
+    }
 
 
     /**
