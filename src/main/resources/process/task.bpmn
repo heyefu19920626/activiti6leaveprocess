@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:activiti="http://activiti.org/bpmn"
+             targetNamespace="http://www.activiti.org/test">
+
+    <process id="task">
+        <startEvent id="start"/>
+        <sequenceFlow id="flow1" sourceRef="start" targetRef="someTask"/>
+        <!-- candidateUsers指定用户 -->
+        <userTask id="someTask" name="Activiti is awesome!"
+                  activiti:candidateUsers="heyefu,user1,user2">
+            <!-- Task描述信息，${message}根据传过来message的值替换 -->
+            <documentation>some Task ${message}</documentation>
+        </userTask>
+        <sequenceFlow id="flow2" sourceRef="someTask" targetRef="end"/>
+        <endEvent id="end"/>
+    </process>
+
+</definitions>
