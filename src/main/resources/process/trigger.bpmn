@@ -6,7 +6,8 @@
     <process id="trigger" name="流程触发trigger">
         <startEvent id="start" name="开始"/>
         <sequenceFlow sourceRef="start" targetRef="someTask"/>
-                      <receiveTask id="someTask" name="任务"/>
+        <!-- 使用receiveTask-->
+        <receiveTask id="someTask" name="任务"/>
         <sequenceFlow sourceRef="someTask" targetRef="end"/>
         <endEvent id="end" name="结束"/>
 

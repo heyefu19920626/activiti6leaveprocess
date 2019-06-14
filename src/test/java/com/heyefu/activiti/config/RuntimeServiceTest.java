@@ -29,6 +29,32 @@ public class RuntimeServiceTest {
     @Rule
     public ActivitiRule activitiRule = new ActivitiRule();
 
+
+    /**
+     * 测试流程触发的 signalEventReceived  信号捕获
+     */
+    @Test
+    @org.activiti.engine.test.Deployment(resources = "process/signal.bpmn")
+    public void testSignalEventReceived(){
+        RuntimeService runtimeService = activitiRule.getRuntimeService();
+        //通过流程图中的<process id="signla">来启动流程
+        ProcessInstance processInstance = runtimeService
+                .startProcessInstanceByKey("signal");
+
+        //获取执行流对象，my-signal是其中信号
+        Execution execution = runtimeService.createExecutionQuery()
+                .signalEventSubscriptionName("my-signal").singleResult();
+        LOGGER.info("execution = [{}]" , execution);
+
+        //来触发我们定义的信号,发出一个my-signal的信号，若不是这个信号则下面输出还停留在signal-received这一步
+        runtimeService.signalEventReceived("my-signal");
+
+        execution = runtimeService.createExecutionQuery()
+                .signalEventSubscriptionName("my-signal").singleResult();
+        //重新打印
+        LOGGER.info("execution = [{}]" , execution);
+    }
+
     /**
      * 流程触发trigger
      *

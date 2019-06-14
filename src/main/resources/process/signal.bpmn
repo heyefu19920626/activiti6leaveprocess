@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             typeLanguage="http://www.w3.org/2001/XMLSchema"
+             expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
+
+    <!-- 定义一个信号 -->
+    <signal id="signalStart" name="my-signal"/>
+
+    <process id="signal">
+        <startEvent id="start"/>
+        <sequenceFlow id="flow1" sourceRef="start" targetRef="signal-received"/>
+        <!-- 捕获事件，当接收到上面定义的my-signal信号才继续向下执行 -->
+        <intermediateCatchEvent id="signal-received">
+            <signalEventDefinition signalRef="signalStart"/>
+        </intermediateCatchEvent>
+        <sequenceFlow id="flow2" sourceRef="signal-received" targetRef="end"/>
+        <endEvent id="end"/>
+    </process>
+
+</definitions>
