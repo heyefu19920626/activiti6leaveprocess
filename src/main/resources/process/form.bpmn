@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:activiti="http://activiti.org/bpmn"
+             targetNamespace="http://www.activiti.org/test">
+
+    <process id="my-process">
+
+        <!-- 配置表单项 -->
+        <startEvent id="start" activiti:formKey="/rest/process/form/start">
+            <!-- 扩展属性 -->
+            <extensionElements>
+                <!-- 设计表单，类型string  且必填 -->
+                <activiti:formProperty id="message" name="新的消息" type="string" required="true"/>
+                <activiti:formProperty id="date" name="Date" type="date" required="true"/>
+            </extensionElements>
+        </startEvent>
+
+        <sequenceFlow id="flow1" sourceRef="start" targetRef="someTask" />
+
+        <userTask id="someTask" name="Activiti is awesome!"
+                  activiti:formKey="/rest/process/form/userTask">
+            <extensionElements>
+                <activiti:formProperty id="yesORno" name="审批结果" type="string" required="true"/>
+            </extensionElements>
+        </userTask>
+
+        <sequenceFlow id="flow2" sourceRef="someTask" targetRef="end" />
+
+        <endEvent id="end" />
+
+    </process>
+
+</definitions>
